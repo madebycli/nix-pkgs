@@ -12,12 +12,17 @@ on:
     paths:
       - flake.nix
       - .github/workflows/update-check.yml
+  pull_request:
+    paths:
+      - flake.nix
+      - flake.lock
+      - .github/workflows/update-check.yml
 
 permissions:
   contents: write
 
 concurrency:
-  group: catalog-input-update-${{ github.ref_name }}
+  group: catalog-input-update-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -26,10 +31,10 @@ jobs:
     timeout-minutes: 180
 
     steps:
-      - name: Checkout target branch
+      - name: Checkout target revision
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
-          ref: ${{ github.event_name == 'push' && github.ref_name || 'main' }}
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.event_name == 'push' && github.ref_name || 'main' }}
           fetch-depth: 0
           persist-credentials: false
 
@@ -69,8 +74,17 @@ jobs:
           nix build .#twintaillauncher .#helium .#sakura .#pipes .#gif-player \
             --no-write-lock-file --print-build-logs
 
+      - name: Print generated lock file for pull-request review
+        if: github.event_name == 'pull_request' && steps.update.outputs.changed == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s\n' '----- BEGIN GENERATED flake.lock -----'
+          cat flake.lock
+          printf '%s\n' '----- END GENERATED flake.lock -----'
+
       - name: Publish validated lock file
-        if: steps.update.outputs.changed == 'true'
+        if: github.event_name != 'pull_request' && steps.update.outputs.changed == 'true'
         env:
           GITHUB_TOKEN: ${{ github.token }}
         shell: bash

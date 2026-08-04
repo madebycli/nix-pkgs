@@ -1,76 +1,114 @@
-# nix-pkgs
+<p align="center">
+  <img src="assets/readme-banner.svg" alt="nix-pkgs — curated software, reproducible builds" width="100%">
+</p>
 
-Pinned Nix catalog for the restored `madebycli` projects:
+<p align="center">
+  <a href="https://github.com/madebycli/nix-pkgs/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/madebycli/nix-pkgs/actions/workflows/ci.yml/badge.svg?branch=main"></a>
+  <img alt="Nix Flake" src="https://img.shields.io/badge/Nix-Flake-5277C3?logo=nixos&logoColor=white">
+  <img alt="Platform" src="https://img.shields.io/badge/platform-x86__64--linux-7c5cff">
+</p>
 
-- `twintaillauncher`
-- `helium`
-- `sakura`
-- `pipes`
-- `gif-player`
+<p align="center">
+  A focused Nix catalog for desktop tools, terminal toys, and Linux applications.
+</p>
 
-The four project inputs are pinned to reviewed repository commits. Helium is fetched from the official `imputnet/helium-linux` release and verified with a fixed hash. No upstream release binary is committed here.
+## Catalog
 
-## Deployed revisions
+| Package | What it is | Run it |
+|---|---|---|
+| [`twintaillauncher`](https://github.com/madebycli/twintail-nix) | Native Nix packaging for TwintailLauncher | `nix run github:madebycli/nix-pkgs#twintaillauncher` |
+| `helium` | Helium browser packaged from the official Linux release | `nix run github:madebycli/nix-pkgs#helium` |
+| [`sakura`](https://github.com/madebycli/sakura) | Procedural cherry blossoms for the terminal | `nix run github:madebycli/nix-pkgs#sakura` |
+| [`pipes`](https://github.com/madebycli/Pipes) | A modern Python take on the classic terminal screensaver | `nix run github:madebycli/nix-pkgs#pipes` |
+| [`gif-player`](https://github.com/madebycli/GIF-Player) | Animated GIF overlays for Wayland desktops | `nix run github:madebycli/nix-pkgs#gif-player` |
 
-| Package | Source revision |
-| --- | --- |
-| TwintailLauncher | `madebycli/twintail-nix@aba65dca27f2f968884caa220018154e15afce3a` |
-| sakura | `madebycli/sakura@e7d2b08b95df9254e08c70c2325a9d33c7e6fe55` |
-| Pipes | `madebycli/Pipes@7afaa691bac592eadc1302a1ce2e55f586a0196f` |
-| GIF-Player | `madebycli/GIF-Player@785729d1245b6b9a64ee42804ed720fdc6777dc7` |
-| Helium | official `imputnet/helium-linux` release `0.12.1.1` |
+Each project remains independently maintained in its own repository. This repository provides one convenient entry point with reviewed source pins and a shared Nixpkgs input.
 
 ## Install
 
+Install a package into the current profile:
+
 ```bash
-nix profile add github:madebycli/nix-pkgs#twintaillauncher
 nix profile add github:madebycli/nix-pkgs#helium
-nix profile add github:madebycli/nix-pkgs#sakura
 nix profile add github:madebycli/nix-pkgs#pipes
-nix profile add github:madebycli/nix-pkgs#gif-player
 ```
 
-Run without installing:
+Replace the package name with any entry from the catalog.
+
+List and remove profile entries:
 
 ```bash
-nix run github:madebycli/nix-pkgs#twintaillauncher
-nix run github:madebycli/nix-pkgs#helium
-nix run github:madebycli/nix-pkgs#sakura
-nix run github:madebycli/nix-pkgs#pipes
-nix run github:madebycli/nix-pkgs#gif-player -- --help
+nix profile list
+nix profile remove <profile-name>
 ```
 
-## NixOS module
-
-The catalog re-exports the TwintailLauncher module:
+## Use as a flake input
 
 ```nix
 {
   inputs.nix-pkgs.url = "github:madebycli/nix-pkgs";
 
   outputs = { nixpkgs, nix-pkgs, ... }: {
-    nixosConfigurations.host = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.example = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
-        nix-pkgs.nixosModules.twintaillauncher
-        { programs.twintaillauncher.enable = true; }
+        ({ pkgs, ... }: {
+          environment.systemPackages = with nix-pkgs.packages.${pkgs.system}; [
+            helium
+            sakura
+            pipes
+            gif-player
+          ];
+        })
       ];
     };
   };
 }
 ```
 
-Enabling the module installs TwintailLauncher and supplies the host integration required by its downloaded runners:
+## Overlay
 
-- native and 32-bit OpenGL/Vulkan driver support;
-- GameMode and Gamescope;
-- a multi-architecture SteamRT-compatible FHS environment;
-- MangoHud and the command-line helpers used by Winetricks;
-- the Wine 11 Visual C++ 2022 and Sparkle overwrite fixes.
+The default overlay exposes the catalog through `pkgs`:
 
-TwintailLauncher continues to download and manage its selected Wine/Proton and Steam Linux Runtime versions itself. The Nix package deliberately does not pin a second, unrelated Wine or Proton build.
+```nix
+{
+  nixpkgs.overlays = [ inputs.nix-pkgs.overlays.default ];
 
-## Validate locally
+  environment.systemPackages = with pkgs; [
+    helium
+    sakura
+    pipes
+    gif-player
+  ];
+}
+```
+
+## NixOS module
+
+The catalog re-exports the TwintailLauncher module for users who prefer a module-based setup:
+
+```nix
+{
+  imports = [ inputs.nix-pkgs.nixosModules.twintaillauncher ];
+  programs.twintaillauncher.enable = true;
+}
+```
+
+Project-specific configuration and usage belong in the corresponding project repository.
+
+## Flake outputs
+
+```text
+packages.x86_64-linux.{twintaillauncher,helium,sakura,pipes,gif-player}
+apps.x86_64-linux.{twintaillauncher,helium,sakura,pipes,gif-player}
+checks.x86_64-linux
+nixosModules.{default,twintaillauncher}
+overlays.default
+```
+
+The combined catalog targets `x86_64-linux`. Individual projects may support additional systems in their own flakes.
+
+## Development
 
 ```bash
 nix flake lock
@@ -81,8 +119,4 @@ nix build .#twintaillauncher .#helium .#sakura .#pipes .#gif-player \
   --no-write-lock-file --print-build-logs
 ```
 
-## Updates
-
-The update workflow is manual-only. It has read-only repository permissions, checks the official Helium Linux release, displays lock-file changes, and validates changed inputs without committing or opening pull requests.
-
-The combined catalog currently targets `x86_64-linux`, because TwintailLauncher is available only for that platform. The individual GIF-Player, sakura, and Pipes repositories additionally expose their own supported systems.
+Updates are reviewed through the lock file and validated by building every catalog entry.

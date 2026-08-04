@@ -4,75 +4,97 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-    twintail-nix = {
+    "twintail-nix" = {
       url = "github:madebycli/twintail-nix/3de4e3d25dd634ba16ea2558b184be2124f04a44";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     sakura = {
       url = "github:madebycli/sakura/2be2ca4697fa292d31ad8f60e924a7cfefc4a627";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     pipes = {
       url = "github:madebycli/Pipes/9aa88d10e33865017242cfe2bd4b44161e4268ad";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    gif-player = {
+    "gif-player" = {
       url = "github:madebycli/GIF-Player/b49539b93dc982bc706548e319b9bb9df1c47fe9";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, ... }:
+  outputs =
+    inputs@{
+      self,
+      nixpkgs,
+      ...
+    }:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs { inherit system; };
-      heliumPackage = import ./packages/helium.nix { inherit pkgs system; };
-      catalog = {
-        twintaillauncher = inputs.twintail-nix.packages.${system}.twintaillauncher;
-        helium = heliumPackage;
-        sakura = inputs.sakura.packages.${system}.sakura;
-        pipes = inputs.pipes.packages.${system}.pipes;
-        gif-player = inputs.gif-player.packages.${system}.gif-player;
-      };
+
+      twintailInput = inputs."twintail-nix";
+      gifPlayerInput = inputs."gif-player";
+
+      twintaillauncher = twintailInput.packages.${system}.twintaillauncher;
+      helium = import ./packages/helium.nix { inherit pkgs system; };
+      sakuraPackage = inputs.sakura.packages.${system}.sakura;
+      pipesPackage = inputs.pipes.packages.${system}.pipes;
+      gifPlayerPackage = gifPlayerInput.packages.${system}."gif-player";
     in
     {
-      packages.${system} = catalog // {
-        default = catalog.twintaillauncher;
+      packages.${system} = {
+        inherit twintaillauncher helium;
+        sakura = sakuraPackage;
+        pipes = pipesPackage;
+        "gif-player" = gifPlayerPackage;
+        default = twintaillauncher;
       };
 
       apps.${system} = {
         twintaillauncher = {
           type = "app";
-          program = "${catalog.twintaillauncher}/bin/twintaillauncher";
+          program = "${twintaillauncher}/bin/twintaillauncher";
         };
         helium = {
           type = "app";
-          program = "${catalog.helium}/bin/helium";
+          program = "${helium}/bin/helium";
         };
         sakura = {
           type = "app";
-          program = "${catalog.sakura}/bin/sakura";
+          program = "${sakuraPackage}/bin/sakura";
         };
         pipes = {
           type = "app";
-          program = "${catalog.pipes}/bin/pipes";
+          program = "${pipesPackage}/bin/pipes";
         };
-        gif-player = {
+        "gif-player" = {
           type = "app";
-          program = "${catalog.gif-player}/bin/gif-player";
+          program = "${gifPlayerPackage}/bin/gif-player";
         };
         default = self.apps.${system}.twintaillauncher;
       };
 
-      checks.${system} = catalog;
-
-      overlays.default = final: _prev: {
-        inherit (catalog) twintaillauncher helium sakura pipes;
-        gif-player = catalog.gif-player;
+      checks.${system} = {
+        inherit twintaillauncher helium;
+        sakura = sakuraPackage;
+        pipes = pipesPackage;
+        "gif-player" = gifPlayerPackage;
       };
 
+      overlays.default = final: _prev:
+        nixpkgs.lib.optionalAttrs (final.stdenv.hostPlatform.system == system) {
+          inherit twintaillauncher helium;
+          sakura = sakuraPackage;
+          pipes = pipesPackage;
+          "gif-player" = gifPlayerPackage;
+        };
+
       nixosModules = {
-        twintaillauncher = inputs.twintail-nix.nixosModules.default;
-        default = self.nixosModules.twintaillauncher;
+        twintaillauncher = twintailInput.nixosModules.default;
+        default = twintailInput.nixosModules.default;
       };
     };
 }

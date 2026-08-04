@@ -26,13 +26,7 @@ jobs:
         run: |
           set -euo pipefail
           nix flake lock
-          if ! git diff --exit-code -- flake.lock; then
-            echo LOCKFILE_BASE64_BEGIN
-            base64 -w0 flake.lock
-            echo
-            echo LOCKFILE_BASE64_END
-            exit 1
-          fi
+          git diff --exit-code -- flake.lock
       - name: Validate outputs
         run: |
           set -euo pipefail

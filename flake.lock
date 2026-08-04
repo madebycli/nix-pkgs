@@ -1,0 +1,120 @@
+{
+  "nodes": {
+    "gif-player": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1785803002,
+        "narHash": "sha256-D97u+X6Z+iUuPCRGTS2z5vL76AuYhLgniAOs72rVtYk=",
+        "owner": "madebycli",
+        "repo": "GIF-Player",
+        "rev": "b49539b93dc982bc706548e319b9bb9df1c47fe9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "madebycli",
+        "repo": "GIF-Player",
+        "rev": "b49539b93dc982bc706548e319b9bb9df1c47fe9",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1785571196,
+        "narHash": "sha256-KoTsyMQqnXQZq8deCEnu4QkyldkwH/bpMMhUcfMdGIw=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "148bab9c1c3c53136ecb44a6ea356a0ed5b39b06",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "pipes": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1785802844,
+        "narHash": "sha256-Cc9jmo5oZda9G1M0yob/1qBLXFhiZg390LCdVLaaYxE=",
+        "owner": "madebycli",
+        "repo": "Pipes",
+        "rev": "9aa88d10e33865017242cfe2bd4b44161e4268ad",
+        "type": "github"
+      },
+      "original": {
+        "owner": "madebycli",
+        "repo": "Pipes",
+        "rev": "9aa88d10e33865017242cfe2bd4b44161e4268ad",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "gif-player": "gif-player",
+        "nixpkgs": "nixpkgs",
+        "pipes": "pipes",
+        "sakura": "sakura",
+        "twintail-nix": "twintail-nix"
+      }
+    },
+    "sakura": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1785802835,
+        "narHash": "sha256-oNSwB0W9uzl7BXiuT9oci+yjjbJM6qy1Py7H96U3kKo=",
+        "owner": "madebycli",
+        "repo": "sakura",
+        "rev": "2be2ca4697fa292d31ad8f60e924a7cfefc4a627",
+        "type": "github"
+      },
+      "original": {
+        "owner": "madebycli",
+        "repo": "sakura",
+        "rev": "2be2ca4697fa292d31ad8f60e924a7cfefc4a627",
+        "type": "github"
+      }
+    },
+    "twintail-nix": {
+      "inputs": {
+        "nixpkgs": "nixpkgs",
+        "twintail_x86_64": "twintail_x86_64"
+      },
+      "locked": {
+        "lastModified": 1785802851,
+        "narHash": "sha256-XrCLXbmt7wvt3TSowqqBcm7FyrjaCZ5/jalNQJhWVvM=",
+        "owner": "madebycli",
+        "repo": "twintail-nix",
+        "rev": "3de4e3d25dd634ba16ea2558b184be2124f04a44",
+        "type": "github"
+      },
+      "original": {
+        "owner": "madebycli",
+        "repo": "twintail-nix",
+        "rev": "3de4e3d25dd634ba16ea2558b184be2124f04a44",
+        "type": "github"
+      }
+    },
+    "twintail_x86_64": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-4OY+2X8N/0EuPUODDqOipmF4NfjezQ35IpYeMswBkOo=",
+        "type": "file",
+        "url": "https://github.com/TwintailTeam/TwintailLauncher/releases/download/ttl-v2.4.0/twintaillauncher_2.4.0_amd64.deb"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/TwintailTeam/TwintailLauncher/releases/download/ttl-v2.4.0/twintaillauncher_2.4.0_amd64.deb"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}

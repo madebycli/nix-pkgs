@@ -10,15 +10,11 @@ let
         artifact = "x86_64";
         hash = versionInfo.hashes.x86_64-linux;
       };
-      aarch64-linux = {
-        artifact = "arm64";
-        hash = versionInfo.hashes.aarch64-linux;
-      };
     }
     .${system} or (throw "Helium is not packaged for ${system}");
 
   src = pkgs.fetchurl {
-    url = "https://github.com/imputnet/helium-linux/releases/download/${versionInfo.tag}/helium-${versionInfo.version}-${platform.artifact}-linux.tar.xz";
+    url = "https://github.com/imputnet/helium-linux/releases/download/${versionInfo.tag}/helium-${versionInfo.version}-${platform.artifact}_linux.tar.xz";
     inherit (platform) hash;
   };
 
@@ -37,7 +33,14 @@ let
     glib
     gtk3
     libdrm
+    libx11
+    libxcomposite
+    libxdamage
+    libxext
+    libxfixes
     libxkbcommon
+    libxrandr
+    libxcb
     mesa
     nspr
     nss
@@ -46,13 +49,6 @@ let
     systemd
     wayland
     zlib
-    xorg.libX11
-    xorg.libXcomposite
-    xorg.libXdamage
-    xorg.libXext
-    xorg.libXfixes
-    xorg.libXrandr
-    xorg.libxcb
   ];
 in
 pkgs.stdenv.mkDerivation {
@@ -120,10 +116,7 @@ pkgs.stdenv.mkDerivation {
     homepage = "https://github.com/imputnet/helium-linux";
     license = with lib.licenses; [ gpl3Only bsd3 ];
     mainProgram = "helium";
-    platforms = [
-      "x86_64-linux"
-      "aarch64-linux"
-    ];
+    platforms = [ "x86_64-linux" ];
     sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
   };
 }

@@ -3,7 +3,6 @@
   version = "0.12.1.1";
 
   hashes = {
-    # Replaced with the hash reported by Nix after the official asset URL is verified.
-    x86_64-linux = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    x86_64-linux = "sha256-LQTffKZUf5HMm/Dgy8UlbLtGldz3ptQm2qPx4fXzY54=";
   };
 }

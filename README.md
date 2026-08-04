@@ -50,10 +50,21 @@ The catalog re-exports the TwintailLauncher module:
 }
 ```
 
+Enabling the module installs TwintailLauncher and supplies the host integration required by its downloaded runners:
+
+- native and 32-bit OpenGL/Vulkan driver support;
+- GameMode and Gamescope;
+- a multi-architecture SteamRT-compatible FHS environment;
+- MangoHud and the command-line helpers used by Winetricks;
+- the Wine 11 Visual C++ 2022 and Sparkle overwrite fixes.
+
+TwintailLauncher continues to download and manage its selected Wine/Proton and Steam Linux Runtime versions itself. The Nix package deliberately does not pin a second, unrelated Wine or Proton build.
+
 ## Validate locally
 
 ```bash
-nix flake metadata --no-write-lock-file .
+nix flake lock
+git diff --exit-code -- flake.lock
 nix flake show --no-write-lock-file
 nix flake check --no-write-lock-file --print-build-logs
 nix build .#twintaillauncher .#helium .#sakura .#pipes .#gif-player \

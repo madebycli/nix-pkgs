@@ -7,17 +7,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1785805952,
-        "narHash": "sha256-CfUZD948sPTRSW8gxZ1oRPW2c+zsAKkHDA9sbtj8ots=",
+        "lastModified": 1785860784,
+        "narHash": "sha256-dy2Ko7ZooDTUT7/Xf8YaOL78GGNu0NuklN+z0Osyqzg=",
         "owner": "madebycli",
         "repo": "GIF-Player",
-        "rev": "2906e22a0894e2688513c6d6f32bcffda69e8498",
+        "rev": "785729d1245b6b9a64ee42804ed720fdc6777dc7",
         "type": "github"
       },
       "original": {
         "owner": "madebycli",
         "repo": "GIF-Player",
-        "rev": "2906e22a0894e2688513c6d6f32bcffda69e8498",
+        "rev": "785729d1245b6b9a64ee42804ed720fdc6777dc7",
         "type": "github"
       }
     },
@@ -44,17 +44,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1785805979,
-        "narHash": "sha256-Gw4SSzDofR/jZTpgaZXwYJ5UzFC/3Lt3KjaZCoVq35c=",
+        "lastModified": 1785860808,
+        "narHash": "sha256-6A0cOFxZE48Fln8aZeBVJ81tKqEhqendmuft4fts1Bk=",
         "owner": "madebycli",
         "repo": "Pipes",
-        "rev": "cd6658214020cba58fb6246363fa0847afdf008c",
+        "rev": "7afaa691bac592eadc1302a1ce2e55f586a0196f",
         "type": "github"
       },
       "original": {
         "owner": "madebycli",
         "repo": "Pipes",
-        "rev": "cd6658214020cba58fb6246363fa0847afdf008c",
+        "rev": "7afaa691bac592eadc1302a1ce2e55f586a0196f",
         "type": "github"
       }
     },
@@ -74,17 +74,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1785805967,
-        "narHash": "sha256-SVHSb4GdEPUA3Gu1GFgYCZ1YbSMYTEdTuecTE7g99z4=",
+        "lastModified": 1785860795,
+        "narHash": "sha256-AWe8IT3JIlmzvvd7pPIdG+cDes5eQ9QGSUAYmB032Bg=",
         "owner": "madebycli",
         "repo": "sakura",
-        "rev": "4206e9dcbcebf24b33e9a0f396a95bf0ff44fb81",
+        "rev": "e7d2b08b95df9254e08c70c2325a9d33c7e6fe55",
         "type": "github"
       },
       "original": {
         "owner": "madebycli",
         "repo": "sakura",
-        "rev": "4206e9dcbcebf24b33e9a0f396a95bf0ff44fb81",
+        "rev": "e7d2b08b95df9254e08c70c2325a9d33c7e6fe55",
         "type": "github"
       }
     },
@@ -96,17 +96,17 @@
         "twintail_x86_64": "twintail_x86_64"
       },
       "locked": {
-        "lastModified": 1785807894,
-        "narHash": "sha256-U9HjSo5pq4XyJlW8b55/Ml71LcWmSYVXKkXVTsUyZ5M=",
+        "lastModified": 1785860819,
+        "narHash": "sha256-A6/fZRcXAuHQ0++tx09noYKM2+LXpmd+fqdFRTMxYoM=",
         "owner": "madebycli",
         "repo": "twintail-nix",
-        "rev": "aa583a567a712553769beed96511f6c323c2af84",
+        "rev": "aba65dca27f2f968884caa220018154e15afce3a",
         "type": "github"
       },
       "original": {
         "owner": "madebycli",
         "repo": "twintail-nix",
-        "rev": "aa583a567a712553769beed96511f6c323c2af84",
+        "rev": "aba65dca27f2f968884caa220018154e15afce3a",
         "type": "github"
       }
     },

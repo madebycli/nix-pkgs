@@ -5,22 +5,22 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     "twintail-nix" = {
-      url = "github:madebycli/twintail-nix/aa583a567a712553769beed96511f6c323c2af84";
+      url = "github:madebycli/twintail-nix/aba65dca27f2f968884caa220018154e15afce3a";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     sakura = {
-      url = "github:madebycli/sakura/4206e9dcbcebf24b33e9a0f396a95bf0ff44fb81";
+      url = "github:madebycli/sakura/e7d2b08b95df9254e08c70c2325a9d33c7e6fe55";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     pipes = {
-      url = "github:madebycli/Pipes/cd6658214020cba58fb6246363fa0847afdf008c";
+      url = "github:madebycli/Pipes/7afaa691bac592eadc1302a1ce2e55f586a0196f";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     "gif-player" = {
-      url = "github:madebycli/GIF-Player/2906e22a0894e2688513c6d6f32bcffda69e8498";
+      url = "github:madebycli/GIF-Player/785729d1245b6b9a64ee42804ed720fdc6777dc7";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

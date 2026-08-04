@@ -1,61 +1,97 @@
-name: Manual update check
+name: Update catalog inputs
 
 on:
   workflow_dispatch:
+  schedule:
+    # Runs after the dedicated Twintail and Helium release checks.
+    - cron: "17 2 * * *"
+  push:
+    branches:
+      - main
+      - "migration/**"
+    paths:
+      - flake.nix
+      - .github/workflows/update-check.yml
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: update-check
-  cancel-in-progress: true
+  group: catalog-input-update-${{ github.ref_name }}
+  cancel-in-progress: false
 
 jobs:
-  check:
+  update:
     runs-on: ubuntu-latest
     timeout-minutes: 180
+
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - name: Checkout target branch
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
+          ref: ${{ github.event_name == 'push' && github.ref_name || 'main' }}
+          fetch-depth: 0
           persist-credentials: false
-      - uses: DeterminateSystems/determinate-nix-action@61cbfe2efc2d4e7a8a6d56967c3c1058e846c858 # v3.21.9
-      - name: Check official Helium Linux release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          current="$(sed -n 's/^[[:space:]]*version = "\([^"]*\)";.*/\1/p' versions/helium.nix)"
-          test -n "$current"
-          latest="$(curl --fail --silent --show-error \
-            --header "Authorization: Bearer $GH_TOKEN" \
-            --header "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/imputnet/helium-linux/releases/latest \
-            | jq -er '.tag_name')"
-          latest="${latest#v}"
-          if [ "$current" = "$latest" ]; then
-            echo "Helium Linux is current: $current"
-          else
-            echo "::warning title=Helium update available::packaged=$current latest=$latest"
-          fi
-      - name: Check for lock changes
+
+      - name: Install Nix
+        uses: DeterminateSystems/determinate-nix-action@61cbfe2efc2d4e7a8a6d56967c3c1058e846c858 # v3.21.9
+
+      - name: Update dedicated package inputs
         id: update
         shell: bash
         run: |
           set -euo pipefail
-          cp flake.lock "$RUNNER_TEMP/flake.lock.before"
-          nix flake update
-          if cmp -s "$RUNNER_TEMP/flake.lock.before" flake.lock; then
+
+          nix flake update twintail-nix helium-nix --refresh
+
+          unexpected="$(git diff --name-only | grep -Ev '^flake\.lock$' || true)"
+          if [ -n "$unexpected" ]; then
+            echo "Unexpected files changed:" >&2
+            printf '%s\n' "$unexpected" >&2
+            exit 1
+          fi
+
+          if git diff --quiet -- flake.lock; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "No input changes detected."
+            echo "Catalog inputs are current."
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
-            git --no-pager diff -- flake.lock
+            git --no-pager diff --check
+            git --no-pager diff --stat -- flake.lock
           fi
-      - name: Validate changed inputs
-        if: steps.update.outputs.changed == 'true'
+
+      - name: Validate complete catalog
+        shell: bash
         run: |
           set -euo pipefail
           nix flake show --no-write-lock-file
           nix flake check --no-write-lock-file --print-build-logs
           nix build .#twintaillauncher .#helium .#sakura .#pipes .#gif-player \
             --no-write-lock-file --print-build-logs
+
+      - name: Publish validated lock file
+        if: steps.update.outputs.changed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          branch="$(git branch --show-current)"
+          test -n "$branch"
+          git fetch --no-tags origin "$branch"
+          test "$(git rev-parse HEAD)" = "$(git rev-parse "origin/$branch")" || {
+            echo "$branch advanced during validation; leaving publication to the next run" >&2
+            exit 1
+          }
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- flake.lock
+          git commit -m "chore(update): refresh dedicated package inputs"
+
+          git remote set-url origin \
+            "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push origin "HEAD:$branch"
+          git remote set-url origin \
+            "https://github.com/${GITHUB_REPOSITORY}.git"

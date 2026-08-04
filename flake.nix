@@ -1,11 +1,16 @@
 {
-  description = "Pinned Nix package catalog for TwintailLauncher, Helium, sakura, Pipes, and GIF-Player";
+  description = "Curated Nix package catalog for TwintailLauncher, Helium, sakura, Pipes, and GIF Player";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     "twintail-nix" = {
-      url = "github:madebycli/twintail-nix/aba65dca27f2f968884caa220018154e15afce3a";
+      url = "github:madebycli/twintail-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    "helium-nix" = {
+      url = "github:madebycli/helium-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -33,13 +38,12 @@
     }:
     let
       system = "x86_64-linux";
-      pkgs = import nixpkgs { inherit system; };
-
       twintailInput = inputs."twintail-nix";
+      heliumInput = inputs."helium-nix";
       gifPlayerInput = inputs."gif-player";
 
       twintaillauncher = twintailInput.packages.${system}.twintaillauncher;
-      helium = import ./packages/helium.nix { inherit pkgs system; };
+      helium = heliumInput.packages.${system}.helium;
       sakuraPackage = inputs.sakura.packages.${system}.sakura;
       pipesPackage = inputs.pipes.packages.${system}.pipes;
       gifPlayerPackage = gifPlayerInput.packages.${system}."gif-player";

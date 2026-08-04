@@ -66,6 +66,20 @@ pkgs.stdenv.mkDerivation {
 
   buildInputs = runtimeLibraries;
 
+  # The upstream archive ships optional Qt 5/6 input-method bridge libraries.
+  # Helium itself is GTK/Chromium-based and does not require Qt. Keeping the
+  # shims while ignoring only their six optional Sonames preserves upstream
+  # functionality on systems that inject Qt later without pulling two full Qt
+  # stacks into the browser closure.
+  autoPatchelfIgnoreMissingDeps = [
+    "libQt5Core.so.5"
+    "libQt5Gui.so.5"
+    "libQt5Widgets.so.5"
+    "libQt6Core.so.6"
+    "libQt6Gui.so.6"
+    "libQt6Widgets.so.6"
+  ];
+
   installPhase = ''
     runHook preInstall
 

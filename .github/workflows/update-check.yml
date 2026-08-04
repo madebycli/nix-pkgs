@@ -16,7 +16,27 @@ jobs:
     timeout-minutes: 180
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
       - uses: DeterminateSystems/determinate-nix-action@61cbfe2efc2d4e7a8a6d56967c3c1058e846c858 # v3.21.9
+      - name: Check official Helium Linux release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          current="$(sed -n 's/^[[:space:]]*version = "\([^"]*\)";.*/\1/p' versions/helium.nix)"
+          test -n "$current"
+          latest="$(curl --fail --silent --show-error \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/imputnet/helium-linux/releases/latest \
+            | jq -er '.tag_name')"
+          latest="${latest#v}"
+          if [ "$current" = "$latest" ]; then
+            echo "Helium Linux is current: $current"
+          else
+            echo "::warning title=Helium update available::packaged=$current latest=$latest"
+          fi
       - name: Check for lock changes
         id: update
         shell: bash
@@ -34,5 +54,8 @@ jobs:
       - name: Validate changed inputs
         if: steps.update.outputs.changed == 'true'
         run: |
-          nix flake check --print-build-logs
-          nix build .#twintaillauncher .#helium .#sakura .#pipes .#gif-player --print-build-logs
+          set -euo pipefail
+          nix flake show --no-write-lock-file
+          nix flake check --no-write-lock-file --print-build-logs
+          nix build .#twintaillauncher .#helium .#sakura .#pipes .#gif-player \
+            --no-write-lock-file --print-build-logs

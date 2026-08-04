@@ -117,11 +117,11 @@
         "twintail_x86_64": "twintail_x86_64"
       },
       "locked": {
-        "lastModified": 1785868795,
-        "narHash": "sha256-0ZGWkjBcIJ2S2BpxzkZCby2uSOwQ7WrK/KLRk97XAp0=",
+        "lastModified": 1785871305,
+        "narHash": "sha256-MwNNGHAfTol6W7zhENHTayIqvhg/U5PSS8bjr5f29GM=",
         "owner": "madebycli",
         "repo": "twintail-nix",
-        "rev": "61ec165fe9f5e3cd1ecf94c7ecf4863926e39895",
+        "rev": "d1fef88ee5a726f4ed2ac6fd86ba73b0ca9d8823",
         "type": "github"
       },
       "original": {

@@ -10,6 +10,16 @@ Pinned Nix catalog for the restored `madebycli` projects:
 
 The four project inputs are pinned to reviewed repository commits. Helium is fetched from the official `imputnet/helium-linux` release and verified with a fixed hash. No upstream release binary is committed here.
 
+## Deployed revisions
+
+| Package | Source revision |
+| --- | --- |
+| TwintailLauncher | `madebycli/twintail-nix@aa583a567a712553769beed96511f6c323c2af84` |
+| sakura | `madebycli/sakura@4206e9dcbcebf24b33e9a0f396a95bf0ff44fb81` |
+| Pipes | `madebycli/Pipes@cd6658214020cba58fb6246363fa0847afdf008c` |
+| GIF-Player | `madebycli/GIF-Player@2906e22a0894e2688513c6d6f32bcffda69e8498` |
+| Helium | official `imputnet/helium-linux` release `0.12.1.1` |
+
 ## Install
 
 ```bash

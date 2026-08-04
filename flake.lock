@@ -21,6 +21,26 @@
         "type": "github"
       }
     },
+    "helium-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1785869723,
+        "narHash": "sha256-79jzzeDfkl14TtKAaYEJuzc/+ZD0RSo6JfnWgg65Sqs=",
+        "owner": "madebycli",
+        "repo": "helium-nix",
+        "rev": "8ad0158442b403d3a4c7ff705edeee651d8bc2af",
+        "type": "github"
+      },
+      "original": {
+        "owner": "madebycli",
+        "repo": "helium-nix",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1785571196,
@@ -61,6 +81,7 @@
     "root": {
       "inputs": {
         "gif-player": "gif-player",
+        "helium-nix": "helium-nix",
         "nixpkgs": "nixpkgs",
         "pipes": "pipes",
         "sakura": "sakura",
@@ -96,17 +117,16 @@
         "twintail_x86_64": "twintail_x86_64"
       },
       "locked": {
-        "lastModified": 1785860819,
-        "narHash": "sha256-A6/fZRcXAuHQ0++tx09noYKM2+LXpmd+fqdFRTMxYoM=",
+        "lastModified": 1785868795,
+        "narHash": "sha256-0ZGWkjBcIJ2S2BpxzkZCby2uSOwQ7WrK/KLRk97XAp0=",
         "owner": "madebycli",
         "repo": "twintail-nix",
-        "rev": "aba65dca27f2f968884caa220018154e15afce3a",
+        "rev": "61ec165fe9f5e3cd1ecf94c7ecf4863926e39895",
         "type": "github"
       },
       "original": {
         "owner": "madebycli",
         "repo": "twintail-nix",
-        "rev": "aba65dca27f2f968884caa220018154e15afce3a",
         "type": "github"
       }
     },

@@ -1,1 +1,55 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360"><rect width="1200" height="360" rx="28" fill="#111827"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
+  <title id="title">nix-pkgs</title>
+  <desc id="desc">A neon package constellation over a deep blue and violet background.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07162f"/>
+      <stop offset="0.55" stop-color="#17245e"/>
+      <stop offset="1" stop-color="#32145d"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#56e0ff"/>
+      <stop offset="0.5" stop-color="#9d7bff"/>
+      <stop offset="1" stop-color="#ff73c8"/>
+    </linearGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#ffffff" stroke-opacity="0.055"/>
+    </pattern>
+    <filter id="glow"><feGaussianBlur stdDeviation="12"/></filter>
+  </defs>
+  <rect width="1200" height="360" rx="28" fill="url(#bg)"/>
+  <rect width="1200" height="360" rx="28" fill="url(#grid)"/>
+  <g opacity="0.22" filter="url(#glow)" fill="none" stroke="url(#accent)" stroke-width="18">
+    <path d="M790 79L905 44L1013 102L1062 213L972 300L846 279L774 183Z"/>
+  </g>
+  <g fill="none" stroke="url(#accent)" stroke-width="3" stroke-linecap="round">
+    <path d="M790 79L905 44L1013 102L1062 213L972 300L846 279L774 183Z"/>
+    <path d="M790 79L922 91L1062 213M774 183L997 144L972 300M905 44L840 222L1013 102M846 279L999 229" opacity="0.72"/>
+  </g>
+  <g fill="#0a1733" stroke="url(#accent)" stroke-width="3">
+    <rect x="770" y="60" width="54" height="54" rx="12"/>
+    <rect x="895" y="18" width="54" height="54" rx="12"/>
+    <rect x="986" y="78" width="54" height="54" rx="12"/>
+    <rect x="1037" y="187" width="54" height="54" rx="12"/>
+    <rect x="946" y="273" width="54" height="54" rx="12"/>
+    <rect x="819" y="252" width="54" height="54" rx="12"/>
+    <rect x="747" y="156" width="54" height="54" rx="12"/>
+    <circle cx="919" cy="180" r="54" fill="#111f47"/>
+  </g>
+  <g fill="#eaf8ff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-weight="700" text-anchor="middle">
+    <text x="797" y="94" font-size="24">01</text>
+    <text x="922" y="52" font-size="23">PKG</text>
+    <text x="1013" y="112" font-size="23">FX</text>
+    <text x="1064" y="221" font-size="22">APP</text>
+    <text x="973" y="307" font-size="23">NIX</text>
+    <text x="846" y="286" font-size="22">DEV</text>
+    <text x="774" y="190" font-size="22">RUN</text>
+    <text x="919" y="190" font-size="34">✦</text>
+  </g>
+  <g font-family="Inter, ui-sans-serif, system-ui, sans-serif">
+    <text x="86" y="139" fill="#ffffff" font-size="72" font-weight="800" letter-spacing="-2">nix-pkgs</text>
+    <text x="90" y="190" fill="#b9ccff" font-size="25" font-weight="600" letter-spacing="2">CURATED SOFTWARE · REPRODUCIBLE BUILDS</text>
+    <text x="90" y="244" fill="#e4e9ff" font-size="22">One flake. Five applications. Clean Nix integration.</text>
+    <rect x="90" y="276" width="290" height="6" rx="3" fill="url(#accent)"/>
+  </g>
+</svg>

@@ -3,12 +3,13 @@ name: Update catalog inputs
 on:
   workflow_dispatch:
   schedule:
-    # Runs after the dedicated Twintail and Helium release checks.
+    # Runs 30 minutes after the dedicated Helium release check.
     - cron: "17 2 * * *"
   push:
     branches:
       - main
       - "migration/**"
+      - "sync/**"
     paths:
       - flake.nix
       - .github/workflows/update-check.yml

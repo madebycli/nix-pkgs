@@ -2,7 +2,9 @@
   "nodes": {
     "gif-player": {
       "inputs": {
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": [
+          "nixpkgs"
+        ]
       },
       "locked": {
         "lastModified": 1785803002,
@@ -37,7 +39,9 @@
     },
     "pipes": {
       "inputs": {
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": [
+          "nixpkgs"
+        ]
       },
       "locked": {
         "lastModified": 1785802844,
@@ -65,7 +69,9 @@
     },
     "sakura": {
       "inputs": {
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": [
+          "nixpkgs"
+        ]
       },
       "locked": {
         "lastModified": 1785802835,
@@ -84,7 +90,9 @@
     },
     "twintail-nix": {
       "inputs": {
-        "nixpkgs": "nixpkgs",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
         "twintail_x86_64": "twintail_x86_64"
       },
       "locked": {

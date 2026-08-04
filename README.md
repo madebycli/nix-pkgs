@@ -14,10 +14,10 @@ The four project inputs are pinned to reviewed repository commits. Helium is fet
 
 | Package | Source revision |
 | --- | --- |
-| TwintailLauncher | `madebycli/twintail-nix@aa583a567a712553769beed96511f6c323c2af84` |
-| sakura | `madebycli/sakura@4206e9dcbcebf24b33e9a0f396a95bf0ff44fb81` |
-| Pipes | `madebycli/Pipes@cd6658214020cba58fb6246363fa0847afdf008c` |
-| GIF-Player | `madebycli/GIF-Player@2906e22a0894e2688513c6d6f32bcffda69e8498` |
+| TwintailLauncher | `madebycli/twintail-nix@aba65dca27f2f968884caa220018154e15afce3a` |
+| sakura | `madebycli/sakura@e7d2b08b95df9254e08c70c2325a9d33c7e6fe55` |
+| Pipes | `madebycli/Pipes@7afaa691bac592eadc1302a1ce2e55f586a0196f` |
+| GIF-Player | `madebycli/GIF-Player@785729d1245b6b9a64ee42804ed720fdc6777dc7` |
 | Helium | official `imputnet/helium-linux` release `0.12.1.1` |
 
 ## Install
@@ -83,6 +83,6 @@ nix build .#twintaillauncher .#helium .#sakura .#pipes .#gif-player \
 
 ## Updates
 
-The update workflow is manual-only. It has read-only repository permissions, displays lock-file changes, and validates changed inputs without committing or opening pull requests.
+The update workflow is manual-only. It has read-only repository permissions, checks the official Helium Linux release, displays lock-file changes, and validates changed inputs without committing or opening pull requests.
 
 The combined catalog currently targets `x86_64-linux`, because TwintailLauncher is available only for that platform. The individual GIF-Player, sakura, and Pipes repositories additionally expose their own supported systems.

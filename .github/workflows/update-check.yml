@@ -76,6 +76,7 @@ jobs:
           fi
 
       - name: Validate complete catalog
+        if: steps.update.outputs.changed == 'true' || github.event_name == 'pull_request' || github.event_name == 'push'
         shell: bash
         run: |
           set -euo pipefail

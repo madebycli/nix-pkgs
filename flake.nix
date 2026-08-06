@@ -1,7 +1,6 @@
 {
   description = "Curated Nix package catalog for TwintailLauncher, Helium, sakura, Pipes, GIF Player, and GitHub Backup Deck";
 
-  # GitHub Backup Deck 0.3.2 is pinned below and verified by the catalog workflow.
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
@@ -31,7 +30,7 @@
     };
 
     "git-backup" = {
-      url = "github:madebycli/git-backup/95345939705daf05da6fc97bbdccdbb66cf4fe05";
+      url = "github:madebycli/git-backup/3342c530901d713027ecd36b8341ff4ef6f50add";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

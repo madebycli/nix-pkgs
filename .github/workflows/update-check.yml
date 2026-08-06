@@ -73,7 +73,7 @@ jobs:
           nix flake show --no-write-lock-file
           nix flake check --no-write-lock-file --print-build-logs
           nix build .#twintaillauncher .#helium .#sakura .#pipes .#gif-player \
-            --no-write-lock-file --print-build-logs
+            .#github-backup-deck --no-write-lock-file --print-build-logs
 
       - name: Print generated lock file for pull-request review
         if: github.event_name == 'pull_request' && steps.update.outputs.changed == 'true'

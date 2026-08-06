@@ -1,5 +1,5 @@
 {
-  description = "Curated Nix package catalog for TwintailLauncher, Helium, sakura, Pipes, and GIF Player";
+  description = "Curated Nix package catalog for TwintailLauncher, Helium, sakura, Pipes, GIF Player, and GitHub Backup Deck";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -28,6 +28,11 @@
       url = "github:madebycli/GIF-Player/785729d1245b6b9a64ee42804ed720fdc6777dc7";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    "git-backup" = {
+      url = "github:madebycli/git-backup/8cf31352bb1beba8c7c866acf5715703a85f900e";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -41,12 +46,14 @@
       twintailInput = inputs."twintail-nix";
       heliumInput = inputs."helium-nix";
       gifPlayerInput = inputs."gif-player";
+      gitBackupInput = inputs."git-backup";
 
       twintaillauncher = twintailInput.packages.${system}.twintaillauncher;
       helium = heliumInput.packages.${system}.helium;
       sakuraPackage = inputs.sakura.packages.${system}.sakura;
       pipesPackage = inputs.pipes.packages.${system}.pipes;
       gifPlayerPackage = gifPlayerInput.packages.${system}."gif-player";
+      gitBackupPackage = gitBackupInput.packages.${system}."github-backup-deck";
     in
     {
       packages.${system} = {
@@ -54,6 +61,7 @@
         sakura = sakuraPackage;
         pipes = pipesPackage;
         "gif-player" = gifPlayerPackage;
+        "github-backup-deck" = gitBackupPackage;
         default = twintaillauncher;
       };
 
@@ -78,6 +86,10 @@
           type = "app";
           program = "${gifPlayerPackage}/bin/gif-player";
         };
+        "github-backup-deck" = {
+          type = "app";
+          program = "${gitBackupPackage}/bin/github-backup-deck";
+        };
         default = self.apps.${system}.twintaillauncher;
       };
 
@@ -86,6 +98,7 @@
         sakura = sakuraPackage;
         pipes = pipesPackage;
         "gif-player" = gifPlayerPackage;
+        "github-backup-deck" = gitBackupPackage;
       };
 
       overlays.default = final: _prev:
@@ -94,6 +107,7 @@
           sakura = sakuraPackage;
           pipes = pipesPackage;
           "gif-player" = gifPlayerPackage;
+          "github-backup-deck" = gitBackupPackage;
         };
 
       nixosModules = {

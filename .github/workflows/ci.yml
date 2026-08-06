@@ -40,3 +40,4 @@ jobs:
           nix build .#sakura --no-write-lock-file --print-build-logs
           nix build .#pipes --no-write-lock-file --print-build-logs
           nix build .#gif-player --no-write-lock-file --print-build-logs
+          nix build .#github-backup-deck --no-write-lock-file --print-build-logs

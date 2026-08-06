@@ -22,6 +22,7 @@
 | [`sakura`](https://github.com/madebycli/sakura) | Procedural cherry blossoms for the terminal | `nix run github:madebycli/nix-pkgs#sakura` |
 | [`pipes`](https://github.com/madebycli/Pipes) | A modern Python take on the classic terminal screensaver | `nix run github:madebycli/nix-pkgs#pipes` |
 | [`gif-player`](https://github.com/madebycli/GIF-Player) | Animated GIF overlays for Wayland desktops | `nix run github:madebycli/nix-pkgs#gif-player` |
+| [`github-backup-deck`](https://github.com/madebycli/git-backup) | Graphical GitHub backup manager for Wayland | `nix run github:madebycli/nix-pkgs#github-backup-deck` |
 
 Each package is maintained in its own repository. This catalog re-exports those packages through one shared Nixpkgs input and one reviewed lock file.
 
@@ -32,6 +33,7 @@ Install a package into the current profile:
 ```bash
 nix profile add github:madebycli/nix-pkgs#helium
 nix profile add github:madebycli/nix-pkgs#pipes
+nix profile add github:madebycli/nix-pkgs#github-backup-deck
 ```
 
 Replace the package name with any entry from the catalog.
@@ -65,6 +67,7 @@ nix profile remove <profile-name>
             sakura
             pipes
             gif-player
+            github-backup-deck
           ];
         })
       ];
@@ -86,6 +89,7 @@ The default overlay exposes the catalog through `pkgs`:
     sakura
     pipes
     gif-player
+    github-backup-deck
   ];
 }
 ```
@@ -112,8 +116,8 @@ The catalog lock file is updated only after every package evaluates, checks, and
 ## Flake outputs
 
 ```text
-packages.x86_64-linux.{twintaillauncher,helium,sakura,pipes,gif-player}
-apps.x86_64-linux.{twintaillauncher,helium,sakura,pipes,gif-player}
+packages.x86_64-linux.{twintaillauncher,helium,sakura,pipes,gif-player,github-backup-deck}
+apps.x86_64-linux.{twintaillauncher,helium,sakura,pipes,gif-player,github-backup-deck}
 checks.x86_64-linux
 nixosModules.{default,twintaillauncher}
 overlays.default
@@ -129,7 +133,7 @@ git diff --exit-code -- flake.lock
 nix flake show --no-write-lock-file
 nix flake check --no-write-lock-file --print-build-logs
 nix build .#twintaillauncher .#helium .#sakura .#pipes .#gif-player \
-  --no-write-lock-file --print-build-logs
+  .#github-backup-deck --no-write-lock-file --print-build-logs
 ```
 
 Updates are reviewed through the lock file and validated by building every catalog entry.

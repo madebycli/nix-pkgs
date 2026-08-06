@@ -21,6 +21,27 @@
         "type": "github"
       }
     },
+    "git-backup": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1785977734,
+        "narHash": "sha256-O/IcuFHyWd0sG34XXcXiVchjoFIqIcfg43Dd+3SWJJA=",
+        "owner": "madebycli",
+        "repo": "git-backup",
+        "rev": "8cf31352bb1beba8c7c866acf5715703a85f900e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "madebycli",
+        "repo": "git-backup",
+        "rev": "8cf31352bb1beba8c7c866acf5715703a85f900e",
+        "type": "github"
+      }
+    },
     "helium-nix": {
       "inputs": {
         "nixpkgs": [
@@ -81,6 +102,7 @@
     "root": {
       "inputs": {
         "gif-player": "gif-player",
+        "git-backup": "git-backup",
         "helium-nix": "helium-nix",
         "nixpkgs": "nixpkgs",
         "pipes": "pipes",

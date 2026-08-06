@@ -23,12 +23,12 @@ permissions:
   contents: write
 
 concurrency:
-  group: catalog-input-update-v2-${{ github.ref }}
+  group: catalog-input-update-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   update:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     timeout-minutes: 180
 
     steps:

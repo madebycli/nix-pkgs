@@ -109,9 +109,19 @@ Project-specific configuration and usage belong in the corresponding project rep
 
 ## Automatic catalog updates
 
-The dedicated Twintail and Helium repositories verify and build new upstream releases before publishing them. This catalog checks those package inputs once per day after their upstream workflows have run.
+All six package inputs follow the current default branch of their dedicated repository. The catalog checks Twintail, Helium, Sakura, Pipes, GIF Player, and GitHub Backup Deck every five minutes, which is the shortest schedule interval supported by GitHub Actions.
 
-The catalog lock file is updated only after every package evaluates, checks, and builds successfully. The same workflow can be started safely from the GitHub Actions page with **Run workflow**.
+A source change does not require a manual Nix pin or a version-only catalog commit. The workflow refreshes the lock file, evaluates the complete flake, runs every check, and builds every package. It publishes the new lock file only after the entire catalog succeeds. Failed source changes therefore remain outside the published catalog until a later commit fixes them.
+
+Helium and Twintail also check their external upstream releases every five minutes and publish a package-repository commit only after their own validation succeeds. GitHub may queue or delay hosted workflows, so an exact one-minute delivery time cannot be guaranteed.
+
+After the validated catalog commit is available, update the local profile with:
+
+```bash
+nix profile upgrade --all --refresh
+```
+
+The update workflow can also receive a `package-updated` repository-dispatch event or be started safely from the GitHub Actions page with **Run workflow**.
 
 ## Flake outputs
 

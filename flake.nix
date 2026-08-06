@@ -1,5 +1,6 @@
 {
   description = "Curated Nix package catalog for TwintailLauncher, Helium, sakura, Pipes, GIF Player, and GitHub Backup Deck";
+  # Validation-only change for the autonomous refresh pipeline.
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";

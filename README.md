@@ -146,6 +146,26 @@ These repositories package external upstream releases. Their `Update upstream re
 
 When an upstream release is known to exist, open the repository's **Actions** page, select **Update upstream release**, and choose **Run workflow**. After it succeeds, run the normal profile upgrade command locally.
 
+## Archived full catalog
+
+The former combined Flake catalog is preserved unchanged on the branch [`archive/full-catalog-2026-08-06`](https://github.com/madebycli/nix-pkgs/tree/archive/full-catalog-2026-08-06).
+
+That branch points to commit `88775d2535465dc8e837541eafa921b1c75a99ca` and contains the previous `flake.nix`, `flake.lock`, package re-exports, overlay, module re-export, CI, and catalog-update workflow. It is a historical backup only: it is not maintained, its package revisions are frozen, and its workflows are not part of the active `main` architecture.
+
+Clone only the archived catalog:
+
+```bash
+git clone --branch archive/full-catalog-2026-08-06 --single-branch \
+  https://github.com/madebycli/nix-pkgs.git nix-pkgs-full-catalog-backup
+```
+
+Restore it locally onto a new working branch without changing `main`:
+
+```bash
+git fetch origin archive/full-catalog-2026-08-06
+git switch -c restore-full-catalog origin/archive/full-catalog-2026-08-06
+```
+
 ## Repository role
 
-`madebycli/nix-pkgs` is intentionally only an index and command reference. It has no `flake.nix`, no `flake.lock`, no package outputs, and no update workflow. The individual repositories are the sole source of truth.
+`madebycli/nix-pkgs` on `main` is intentionally only an index and command reference. It has no `flake.nix`, no `flake.lock`, no package outputs, and no update workflow. The individual repositories are the sole source of truth. The archived full-catalog branch exists only as a rollback and reference snapshot.

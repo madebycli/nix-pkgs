@@ -23,7 +23,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: catalog-input-update-${{ github.ref }}
+  group: catalog-input-update-v2-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:

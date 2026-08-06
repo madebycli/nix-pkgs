@@ -49,11 +49,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1785870765,
-        "narHash": "sha256-dMvRjHuulBQmET0zJFDX1ho/AhiARCjc749T4XXaJh8=",
+        "lastModified": 1786014399,
+        "narHash": "sha256-pqf/lPQgCG//RR4VOc634W3M5m3Cws0p352vBJWFlPw=",
         "owner": "madebycli",
         "repo": "helium-nix",
-        "rev": "127da972c3e8e51ddb02960ec306b6b8c9af79cb",
+        "rev": "cbf8f7fe59de32457f1742553c7ae0117e278f17",
         "type": "github"
       },
       "original": {

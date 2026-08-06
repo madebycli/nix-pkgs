@@ -1,149 +1,151 @@
 <p align="center">
-  <img src="assets/readme-banner.svg" alt="nix-pkgs — curated software, reproducible builds" width="100%">
+  <img src="assets/readme-banner.svg" alt="Nix software index — direct repository installs" width="100%">
 </p>
 
 <p align="center">
-  <a href="https://github.com/madebycli/nix-pkgs/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/madebycli/nix-pkgs/actions/workflows/ci.yml/badge.svg?branch=main"></a>
-  <a href="https://github.com/madebycli/nix-pkgs/actions/workflows/update-check.yml"><img alt="Catalog updates" src="https://github.com/madebycli/nix-pkgs/actions/workflows/update-check.yml/badge.svg?branch=main"></a>
-  <img alt="Nix Flake" src="https://img.shields.io/badge/Nix-Flake-5277C3?logo=nixos&logoColor=white">
-  <img alt="Platform" src="https://img.shields.io/badge/platform-x86__64--linux-7c5cff">
+  Direct Nix commands for the maintained repositories. This repository is documentation only and is not a Flake or package mirror.
 </p>
 
-<p align="center">
-  A focused Nix catalog for desktop tools, terminal toys, and Linux applications.
-</p>
+## Why direct repositories?
 
-## Catalog
+Every project owns its package, checks, Flake outputs, and optional NixOS modules. A commit on a project's default branch is therefore available directly without waiting for a second catalog repository to update a lock file.
 
-| Package | What it is | Run it |
-|---|---|---|
-| [`twintaillauncher`](https://github.com/madebycli/twintail-nix) | Native Nix packaging for TwintailLauncher | `nix run github:madebycli/nix-pkgs#twintaillauncher` |
-| [`helium`](https://github.com/madebycli/helium-nix) | Native Nix packaging for the official Helium Linux release | `nix run github:madebycli/nix-pkgs#helium` |
-| [`sakura`](https://github.com/madebycli/sakura) | Procedural cherry blossoms for the terminal | `nix run github:madebycli/nix-pkgs#sakura` |
-| [`pipes`](https://github.com/madebycli/Pipes) | A modern Python take on the classic terminal screensaver | `nix run github:madebycli/nix-pkgs#pipes` |
-| [`gif-player`](https://github.com/madebycli/GIF-Player) | Animated GIF overlays for Wayland desktops | `nix run github:madebycli/nix-pkgs#gif-player` |
-| [`github-backup-deck`](https://github.com/madebycli/git-backup) | Graphical GitHub backup manager for Wayland | `nix run github:madebycli/nix-pkgs#github-backup-deck` |
-
-Each package is maintained in its own repository. This catalog re-exports those packages through one shared Nixpkgs input and one reviewed lock file.
-
-## Install
-
-Install a package into the current profile:
-
-```bash
-nix profile add github:madebycli/nix-pkgs#helium
-nix profile add github:madebycli/nix-pkgs#pipes
-nix profile add github:madebycli/nix-pkgs#github-backup-deck
-```
-
-Replace the package name with any entry from the catalog.
-
-Update every package in the current profile:
+The only local command needed to refresh installed profile packages is:
 
 ```bash
 nix profile upgrade --all --refresh
 ```
 
-List and remove profile entries:
+## Packages
+
+| Package | Repository | Run directly |
+|---|---|---|
+| TwintailLauncher | [`madebycli/twintail-nix`](https://github.com/madebycli/twintail-nix) | `nix run github:madebycli/twintail-nix#twintaillauncher` |
+| Helium | [`madebycli/helium-nix`](https://github.com/madebycli/helium-nix) | `nix run github:madebycli/helium-nix#helium` |
+| Sakura | [`madebycli/sakura`](https://github.com/madebycli/sakura) | `nix run github:madebycli/sakura#sakura` |
+| Pipes | [`madebycli/Pipes`](https://github.com/madebycli/Pipes) | `nix run github:madebycli/Pipes#pipes` |
+| GIF Player | [`madebycli/GIF-Player`](https://github.com/madebycli/GIF-Player) | `nix run github:madebycli/GIF-Player#gif-player` |
+| GitHub Backup Deck | [`madebycli/git-backup`](https://github.com/madebycli/git-backup) | `nix run github:madebycli/git-backup#github-backup-deck` |
+
+## Install into a Nix profile
+
+Install any or all packages directly from their own repositories:
+
+```bash
+nix profile add github:madebycli/twintail-nix#twintaillauncher
+nix profile add github:madebycli/helium-nix#helium
+nix profile add github:madebycli/sakura#sakura
+nix profile add github:madebycli/Pipes#pipes
+nix profile add github:madebycli/GIF-Player#gif-player
+nix profile add github:madebycli/git-backup#github-backup-deck
+```
+
+Refresh every installed profile package:
+
+```bash
+nix profile upgrade --all --refresh
+```
+
+Inspect or remove profile entries:
 
 ```bash
 nix profile list
-nix profile remove <profile-name>
+nix profile remove <profile-name-or-index>
 ```
 
-## Use as a flake input
+Packages previously installed through `github:madebycli/nix-pkgs` should be removed once and added again with the direct repository command above. After that migration, future upgrades no longer pass through this index.
+
+## Use directly in a NixOS Flake
+
+Add only the repositories that the system actually uses:
 
 ```nix
 {
-  inputs.nix-pkgs.url = "github:madebycli/nix-pkgs";
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-  outputs = { nixpkgs, nix-pkgs, ... }: {
-    nixosConfigurations.example = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [
-        ({ pkgs, ... }: {
-          environment.systemPackages = with nix-pkgs.packages.${pkgs.system}; [
-            helium
-            sakura
-            pipes
-            gif-player
-            github-backup-deck
-          ];
-        })
-      ];
-    };
+    twintail-nix.url = "github:madebycli/twintail-nix";
+    helium-nix.url = "github:madebycli/helium-nix";
+    sakura.url = "github:madebycli/sakura";
+    pipes.url = "github:madebycli/Pipes";
+    gif-player.url = "github:madebycli/GIF-Player";
+    git-backup.url = "github:madebycli/git-backup";
+
+    twintail-nix.inputs.nixpkgs.follows = "nixpkgs";
+    helium-nix.inputs.nixpkgs.follows = "nixpkgs";
+    sakura.inputs.nixpkgs.follows = "nixpkgs";
+    pipes.inputs.nixpkgs.follows = "nixpkgs";
+    gif-player.inputs.nixpkgs.follows = "nixpkgs";
+    git-backup.inputs.nixpkgs.follows = "nixpkgs";
   };
 }
 ```
 
-## Overlay
-
-The default overlay exposes the catalog through `pkgs`:
+Use their packages directly:
 
 ```nix
+{ inputs, pkgs, ... }:
 {
-  nixpkgs.overlays = [ inputs.nix-pkgs.overlays.default ];
-
-  environment.systemPackages = with pkgs; [
-    helium
-    sakura
-    pipes
-    gif-player
-    github-backup-deck
+  environment.systemPackages = [
+    inputs.twintail-nix.packages.${pkgs.system}.twintaillauncher
+    inputs.helium-nix.packages.${pkgs.system}.helium
+    inputs.sakura.packages.${pkgs.system}.sakura
+    inputs.pipes.packages.${pkgs.system}.pipes
+    inputs.gif-player.packages.${pkgs.system}.gif-player
+    inputs.git-backup.packages.${pkgs.system}.github-backup-deck
   ];
 }
 ```
 
-## NixOS module
+## NixOS and Home Manager modules
 
-The catalog re-exports the TwintailLauncher module:
+TwintailLauncher exposes its NixOS module directly:
 
 ```nix
 {
-  imports = [ inputs.nix-pkgs.nixosModules.twintaillauncher ];
+  imports = [ inputs.twintail-nix.nixosModules.default ];
   programs.twintaillauncher.enable = true;
 }
 ```
 
-Project-specific configuration and usage belong in the corresponding project repository.
+GitHub Backup Deck exposes both NixOS and Home Manager modules directly:
 
-## Automatic catalog updates
+```nix
+{
+  imports = [ inputs.git-backup.nixosModules.default ];
+}
+```
 
-All six package inputs follow the current default branch of their dedicated repository. The catalog checks Twintail, Helium, Sakura, Pipes, GIF Player, and GitHub Backup Deck every five minutes, which is the shortest schedule interval supported by GitHub Actions.
+```nix
+{
+  imports = [ inputs.git-backup.homeManagerModules.default ];
+}
+```
 
-A source change does not require a manual Nix pin or a version-only catalog commit. The workflow refreshes the lock file, evaluates the complete flake, runs every check, and builds every package. It publishes the new lock file only after the entire catalog succeeds. Failed source changes therefore remain outside the published catalog until a later commit fixes them.
+For Sakura, Pipes, GIF Player, and Helium, use the package output directly unless their repository later adds a dedicated module.
 
-Helium and Twintail also check their external upstream releases every five minutes and publish a package-repository commit only after their own validation succeeds. GitHub may queue or delay hosted workflows, so an exact one-minute delivery time cannot be guaranteed.
+## Update behavior
 
-After the validated catalog commit is available, update the local profile with:
+### Sakura, Pipes, GIF Player, and GitHub Backup Deck
+
+Their Nix packages use the source from the same repository. A normal commit to the default branch is the new package source immediately; no separate Nix catalog commit is required.
+
+To fetch it locally:
 
 ```bash
 nix profile upgrade --all --refresh
 ```
 
-The update workflow can also receive a `package-updated` repository-dispatch event or be started safely from the GitHub Actions page with **Run workflow**.
+### Helium and TwintailLauncher
 
-## Flake outputs
+These repositories package external upstream releases. Their `Update upstream release` workflow:
 
-```text
-packages.x86_64-linux.{twintaillauncher,helium,sakura,pipes,gif-player,github-backup-deck}
-apps.x86_64-linux.{twintaillauncher,helium,sakura,pipes,gif-player,github-backup-deck}
-checks.x86_64-linux
-nixosModules.{default,twintaillauncher}
-overlays.default
-```
+- checks automatically once per day;
+- remains manually startable from the GitHub Actions page;
+- validates the new source and package before committing an update.
 
-The combined catalog targets `x86_64-linux`. Individual projects may support additional systems in their own flakes.
+When an upstream release is known to exist, open the repository's **Actions** page, select **Update upstream release**, and choose **Run workflow**. After it succeeds, run the normal profile upgrade command locally.
 
-## Development
+## Repository role
 
-```bash
-nix flake lock
-git diff --exit-code -- flake.lock
-nix flake show --no-write-lock-file
-nix flake check --no-write-lock-file --print-build-logs
-nix build .#twintaillauncher .#helium .#sakura .#pipes .#gif-player \
-  .#github-backup-deck --no-write-lock-file --print-build-logs
-```
-
-Updates are reviewed through the lock file and validated by building every catalog entry.
+`madebycli/nix-pkgs` is intentionally only an index and command reference. It has no `flake.nix`, no `flake.lock`, no package outputs, and no update workflow. The individual repositories are the sole source of truth.

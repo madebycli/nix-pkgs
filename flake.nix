@@ -30,7 +30,7 @@
     };
 
     "git-backup" = {
-      url = "github:madebycli/git-backup/e1de5bc85500618b4a746b325ce40ab3e5826fc8";
+      url = "github:madebycli/git-backup/3342c530901d713027ecd36b8341ff4ef6f50add";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

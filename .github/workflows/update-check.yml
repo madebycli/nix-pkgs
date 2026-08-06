@@ -2,9 +2,11 @@ name: Update catalog inputs
 
 on:
   workflow_dispatch:
+  repository_dispatch:
+    types: [package-updated]
   schedule:
-    # Runs 60 minutes after Twintail and 30 minutes after Helium.
-    - cron: "17 2 * * *"
+    # GitHub Actions' shortest supported schedule interval is five minutes.
+    - cron: "*/5 * * * *"
   push:
     branches:
       - main
@@ -23,7 +25,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: catalog-input-update-${{ github.ref }}
+  group: catalog-input-update-${{ github.ref || 'main' }}
   cancel-in-progress: false
 
 jobs:
@@ -42,13 +44,20 @@ jobs:
       - name: Install Nix
         uses: DeterminateSystems/determinate-nix-action@61cbfe2efc2d4e7a8a6d56967c3c1058e846c858 # v3.21.9
 
-      - name: Update dedicated package inputs
+      - name: Refresh every package repository
         id: update
         shell: bash
         run: |
           set -euo pipefail
 
-          nix flake update twintail-nix helium-nix --refresh
+          nix flake update \
+            twintail-nix \
+            helium-nix \
+            sakura \
+            pipes \
+            gif-player \
+            git-backup \
+            --refresh
 
           unexpected="$(git diff --name-only | grep -Ev '^flake\.lock$' || true)"
           if [ -n "$unexpected" ]; then
@@ -103,7 +112,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -- flake.lock
-          git commit -m "chore(update): refresh dedicated package inputs"
+          git commit -m "chore(update): refresh package catalog inputs"
 
           git remote set-url origin \
             "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"

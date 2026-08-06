@@ -17,7 +17,6 @@
       "original": {
         "owner": "madebycli",
         "repo": "GIF-Player",
-        "rev": "785729d1245b6b9a64ee42804ed720fdc6777dc7",
         "type": "github"
       }
     },
@@ -38,7 +37,6 @@
       "original": {
         "owner": "madebycli",
         "repo": "git-backup",
-        "rev": "3342c530901d713027ecd36b8341ff4ef6f50add",
         "type": "github"
       }
     },
@@ -95,7 +93,6 @@
       "original": {
         "owner": "madebycli",
         "repo": "Pipes",
-        "rev": "7afaa691bac592eadc1302a1ce2e55f586a0196f",
         "type": "github"
       }
     },
@@ -127,7 +124,6 @@
       "original": {
         "owner": "madebycli",
         "repo": "sakura",
-        "rev": "e7d2b08b95df9254e08c70c2325a9d33c7e6fe55",
         "type": "github"
       }
     },

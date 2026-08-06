@@ -15,22 +15,22 @@
     };
 
     sakura = {
-      url = "github:madebycli/sakura/e7d2b08b95df9254e08c70c2325a9d33c7e6fe55";
+      url = "github:madebycli/sakura";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     pipes = {
-      url = "github:madebycli/Pipes/7afaa691bac592eadc1302a1ce2e55f586a0196f";
+      url = "github:madebycli/Pipes";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     "gif-player" = {
-      url = "github:madebycli/GIF-Player/785729d1245b6b9a64ee42804ed720fdc6777dc7";
+      url = "github:madebycli/GIF-Player";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     "git-backup" = {
-      url = "github:madebycli/git-backup/3342c530901d713027ecd36b8341ff4ef6f50add";
+      url = "github:madebycli/git-backup";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

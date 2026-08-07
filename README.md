@@ -8,7 +8,7 @@
 
 ## Why direct repositories?
 
-Every project owns its package, checks, Flake outputs, lock file, and optional NixOS modules. A commit on a project's default branch is therefore available directly without waiting for a second catalog repository.
+Every project owns its package, checks, Flake outputs, lock file, and optional NixOS or Home Manager modules. A commit on a project's default branch is available directly without waiting for a second catalog repository.
 
 The normal local update command is:
 
@@ -26,6 +26,7 @@ nix profile upgrade --all --refresh
 | Pipes | [`madebycli/Pipes`](https://github.com/madebycli/Pipes) | `nix run github:madebycli/Pipes#pipes` |
 | GIF Player | [`madebycli/GIF-Player`](https://github.com/madebycli/GIF-Player) | `nix run github:madebycli/GIF-Player#gif-player` |
 | GitHub Backup Deck | [`madebycli/git-backup`](https://github.com/madebycli/git-backup) | `nix run github:madebycli/git-backup#github-backup-deck` |
+| Nix Settings | [`madebycli/nix-settings`](https://github.com/madebycli/nix-settings) | `nix run github:madebycli/nix-settings#nix-settings -- sound` |
 
 ## Install into a Nix profile
 
@@ -36,6 +37,7 @@ nix profile add github:madebycli/sakura#sakura
 nix profile add github:madebycli/Pipes#pipes
 nix profile add github:madebycli/GIF-Player#gif-player
 nix profile add github:madebycli/git-backup#github-backup-deck
+nix profile add github:madebycli/nix-settings#nix-settings
 ```
 
 Refresh every installed profile package:
@@ -55,25 +57,21 @@ Packages previously installed through `github:madebycli/nix-pkgs` should be remo
 
 ## What updates automatically?
 
-There are three independent update layers.
+### Project source code
 
-### 1. Project source code
+Sakura, Pipes, GIF Player, GitHub Backup Deck, and Nix Settings package the source from their own repository. A normal commit to `main` changes the package source immediately, even when the visible application version is unchanged. No Nix file, package version, catalog pin, or extra release commit is required.
 
-Sakura, Pipes, GIF Player, and GitHub Backup Deck package the source from their own repository. A normal commit to `main` changes the package source immediately, even when the application version string is unchanged. No Nix file, package version, catalog pin, or extra release commit is required.
-
-After the commit is on `main`, run:
+After the commit reaches `main`, run:
 
 ```bash
 nix profile upgrade --all --refresh
 ```
 
-The same rule applies to changes in the Nix packaging code of TwintailLauncher and Helium. Their external application payloads are handled separately as described below.
+The same rule applies to changes in the Nix packaging code of TwintailLauncher and Helium. Their external application payloads are handled separately.
 
-### 2. Nixpkgs and build dependencies
+### Nixpkgs and build dependencies
 
-Every project commits a `flake.lock`. The lock file makes an installation reproducible and prevents an untested dependency update from breaking users unexpectedly.
-
-A committed lock file does not update itself on the user's computer. Each repository therefore has an **Update Nixpkgs input** workflow that:
+Every project commits a `flake.lock`. Each repository has an **Update Nixpkgs input** workflow that:
 
 - runs automatically once per day;
 - can be started manually with **Run workflow**;
@@ -81,62 +79,42 @@ A committed lock file does not update itself on the user's computer. Each reposi
 - evaluates the Flake, runs its checks, and builds the package;
 - commits the new lock file only after validation succeeds.
 
-This means a future installation uses the newest dependency set that the repository has successfully validated. It does not remain permanently tied to today's dependencies while the repository automation is active.
+A future installation therefore uses the newest dependency set successfully validated by that repository. An abandoned repository or one with Actions disabled remains reproducibly pinned to its last validated lock file.
 
-“Newest dependencies” means the newest versions currently packaged and successfully evaluated in `nixos-unstable`. It does not guarantee that every individual upstream library is at its absolute newest release on the same day.
+### External application releases
 
-A repository that is abandoned, archived, or has Actions disabled remains pinned to its last validated lock file. This is intentional reproducibility rather than silent dependency drift.
-
-### 3. External application releases
-
-TwintailLauncher and Helium package external upstream releases. Their **Update upstream release** workflows:
-
-- check automatically once per day;
-- remain manually startable;
-- validate the new upstream source and package before committing an update.
-
-A new upstream release becomes available through the direct repository after that validated updater commit.
+TwintailLauncher and Helium package external upstream releases. Their **Update upstream release** workflows run once per day, remain manually startable, and publish an update only after validation succeeds.
 
 ## Five-year behavior
 
-Installing from an unlocked repository reference such as:
+An unlocked reference such as:
 
 ```bash
-nix profile add github:madebycli/sakura#sakura
+nix profile add github:madebycli/nix-settings#nix-settings
 ```
 
-selects the current `main` commit of that repository. The package source is therefore the current source, and its dependencies are the versions recorded in the current validated `flake.lock`.
-
-Running this later:
+selects the current `main` commit. Later:
 
 ```bash
 nix profile upgrade --all --refresh
 ```
 
-fetches the newest repository commits for profile entries installed through unlocked references. It then uses the lock files contained in those newest commits.
-
-Therefore, after five years:
-
-- current project source comes from the current repository `main`;
-- Nixpkgs comes from the latest lock update that successfully passed the repository's automated tests;
-- Helium and TwintailLauncher use the latest upstream release their updater successfully validated;
-- no manual edit to `flake.nix`, `package.nix`, or `flake.lock` is expected during normal maintenance.
-
-Do not install using an explicit commit SHA when future upgrades are desired. A URL containing a fixed commit is intentionally immutable.
+fetches the newest repository commit and uses the validated `flake.lock` contained in that commit. Do not install using an explicit commit SHA when future upgrades are desired; a fixed SHA is intentionally immutable.
 
 ## Direct-install verification
 
-Every project CI now tests its exact public profile command against the GitHub repository, for example:
+Every project CI verifies:
 
-```bash
-nix profile add github:madebycli/git-backup#github-backup-deck
-```
+- that `flake.lock` exists and is synchronized;
+- Flake evaluation and checks;
+- the complete package build;
+- the exact public `nix profile add github:…#…` command.
 
-The CI also verifies that `nix flake lock` produces no uncommitted lock-file changes. A missing or stale lock file therefore fails CI instead of reaching users unnoticed.
+A missing or stale lock file therefore fails CI instead of reaching users unnoticed.
 
 ## Use directly in a NixOS Flake
 
-Add only the repositories that the system actually uses:
+Add only the repositories that the system uses:
 
 ```nix
 {
@@ -149,6 +127,7 @@ Add only the repositories that the system actually uses:
     pipes.url = "github:madebycli/Pipes";
     gif-player.url = "github:madebycli/GIF-Player";
     git-backup.url = "github:madebycli/git-backup";
+    nix-settings.url = "github:madebycli/nix-settings";
 
     twintail-nix.inputs.nixpkgs.follows = "nixpkgs";
     helium-nix.inputs.nixpkgs.follows = "nixpkgs";
@@ -156,6 +135,7 @@ Add only the repositories that the system actually uses:
     pipes.inputs.nixpkgs.follows = "nixpkgs";
     gif-player.inputs.nixpkgs.follows = "nixpkgs";
     git-backup.inputs.nixpkgs.follows = "nixpkgs";
+    nix-settings.inputs.nixpkgs.follows = "nixpkgs";
   };
 }
 ```
@@ -172,13 +152,14 @@ Use their package outputs directly:
     inputs.pipes.packages.${pkgs.system}.pipes
     inputs.gif-player.packages.${pkgs.system}.gif-player
     inputs.git-backup.packages.${pkgs.system}.github-backup-deck
+    inputs.nix-settings.packages.${pkgs.system}.nix-settings
   ];
 }
 ```
 
 ## NixOS and Home Manager modules
 
-TwintailLauncher exposes its NixOS module directly:
+TwintailLauncher exposes a NixOS module:
 
 ```nix
 {
@@ -187,7 +168,7 @@ TwintailLauncher exposes its NixOS module directly:
 }
 ```
 
-GitHub Backup Deck exposes both NixOS and Home Manager modules directly:
+GitHub Backup Deck exposes NixOS and Home Manager modules:
 
 ```nix
 {
@@ -201,15 +182,27 @@ GitHub Backup Deck exposes both NixOS and Home Manager modules directly:
 }
 ```
 
+Nix Settings also exposes both module types:
+
+```nix
+{
+  imports = [ inputs.nix-settings.nixosModules.default ];
+  programs.nix-settings.enable = true;
+}
+```
+
+```nix
+{
+  imports = [ inputs.nix-settings.homeManagerModules.default ];
+  programs.nix-settings.enable = true;
+}
+```
+
 For Sakura, Pipes, GIF Player, and Helium, use the package output directly unless their repository later adds a dedicated module.
 
 ## Archived full catalog
 
-The former combined Flake catalog is preserved unchanged on the branch [`archive/full-catalog-2026-08-06`](https://github.com/madebycli/nix-pkgs/tree/archive/full-catalog-2026-08-06).
-
-That branch points to commit `88775d2535465dc8e837541eafa921b1c75a99ca` and contains the previous `flake.nix`, `flake.lock`, package re-exports, overlay, module re-export, CI, and catalog-update workflow. It is a historical backup only and is not maintained.
-
-Clone only the archived catalog:
+The former combined Flake catalog is preserved unchanged on [`archive/full-catalog-2026-08-06`](https://github.com/madebycli/nix-pkgs/tree/archive/full-catalog-2026-08-06). It is a historical backup only and is not maintained.
 
 ```bash
 git clone --branch archive/full-catalog-2026-08-06 --single-branch \

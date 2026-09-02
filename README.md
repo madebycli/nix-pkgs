@@ -27,6 +27,7 @@ nix profile upgrade --all --refresh
 | GIF Player | [`madebycli/GIF-Player`](https://github.com/madebycli/GIF-Player) | `nix run github:madebycli/GIF-Player#gif-player` |
 | GitHub Backup Deck | [`madebycli/git-backup`](https://github.com/madebycli/git-backup) | `nix run github:madebycli/git-backup#github-backup-deck` |
 | Nix Settings | [`madebycli/nix-settings`](https://github.com/madebycli/nix-settings) | `nix run github:madebycli/nix-settings#nix-settings -- sound` |
+| Web App Hub | [`madebycli/web-app-hub`](https://github.com/madebycli/web-app-hub) | `nix run github:madebycli/web-app-hub#web-app-hub` |
 
 ## Install into a Nix profile
 
@@ -38,6 +39,7 @@ nix profile add github:madebycli/Pipes#pipes
 nix profile add github:madebycli/GIF-Player#gif-player
 nix profile add github:madebycli/git-backup#github-backup-deck
 nix profile add github:madebycli/nix-settings#nix-settings
+nix profile add github:madebycli/web-app-hub#web-app-hub
 ```
 
 Refresh every installed profile package:
@@ -59,7 +61,7 @@ Packages previously installed through `github:madebycli/nix-pkgs` should be remo
 
 ### Project source code
 
-Sakura, Pipes, GIF Player, GitHub Backup Deck, and Nix Settings package the source from their own repository. A normal commit to `main` changes the package source immediately, even when the visible application version is unchanged. No Nix file, package version, catalog pin, or extra release commit is required.
+Sakura, Pipes, GIF Player, GitHub Backup Deck, Nix Settings, and Web App Hub package the source from their own repository. A normal commit to `main` changes the package source immediately, even when the visible application version is unchanged. No Nix file, package version, catalog pin, or extra release commit is required.
 
 After the commit reaches `main`, run:
 
@@ -68,6 +70,8 @@ nix profile upgrade --all --refresh
 ```
 
 The same rule applies to changes in the Nix packaging code of TwintailLauncher and Helium. Their external application payloads are handled separately.
+
+Web App Hub is intentionally a local-source package. It does not have an automatic upstream-source/release checker. Its Rust crate dependencies are separately refreshed within the version constraints declared by `Cargo.toml`, validated with the Nix build, and committed only after a successful build.
 
 ### Nixpkgs and build dependencies
 
@@ -90,7 +94,7 @@ TwintailLauncher and Helium package external upstream releases. Their **Update u
 An unlocked reference such as:
 
 ```bash
-nix profile add github:madebycli/nix-settings#nix-settings
+nix profile add github:madebycli/web-app-hub#web-app-hub
 ```
 
 selects the current `main` commit. Later:
@@ -128,6 +132,7 @@ Add only the repositories that the system uses:
     gif-player.url = "github:madebycli/GIF-Player";
     git-backup.url = "github:madebycli/git-backup";
     nix-settings.url = "github:madebycli/nix-settings";
+    web-app-hub.url = "github:madebycli/web-app-hub";
 
     twintail-nix.inputs.nixpkgs.follows = "nixpkgs";
     helium-nix.inputs.nixpkgs.follows = "nixpkgs";
@@ -136,6 +141,7 @@ Add only the repositories that the system uses:
     gif-player.inputs.nixpkgs.follows = "nixpkgs";
     git-backup.inputs.nixpkgs.follows = "nixpkgs";
     nix-settings.inputs.nixpkgs.follows = "nixpkgs";
+    web-app-hub.inputs.nixpkgs.follows = "nixpkgs";
   };
 }
 ```
@@ -153,6 +159,7 @@ Use their package outputs directly:
     inputs.gif-player.packages.${pkgs.system}.gif-player
     inputs.git-backup.packages.${pkgs.system}.github-backup-deck
     inputs.nix-settings.packages.${pkgs.system}.nix-settings
+    inputs.web-app-hub.packages.${pkgs.system}.web-app-hub
   ];
 }
 ```
@@ -195,6 +202,22 @@ Nix Settings also exposes both module types:
 {
   imports = [ inputs.nix-settings.homeManagerModules.default ];
   programs.nix-settings.enable = true;
+}
+```
+
+Web App Hub exposes both module types as well:
+
+```nix
+{
+  imports = [ inputs.web-app-hub.nixosModules.default ];
+  programs.web-app-hub.enable = true;
+}
+```
+
+```nix
+{
+  imports = [ inputs.web-app-hub.homeManagerModules.default ];
+  programs.web-app-hub.enable = true;
 }
 ```
 
